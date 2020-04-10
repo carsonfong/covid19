@@ -1,0 +1,43 @@
+---
+title: "Ontario Daily ICU Vent Count"
+author: "Carson Fong"
+date: "10/04/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+# Import data from Ontario's open dataset
+on_daily_cases <- read_csv("https://data.ontario.ca/dataset/f4f86e54-872d-43f8-8a86-3892fd3cb5e6/resource/ed270bb8-340b-41f9-a7c6-e8ef587e6d11/download/covidtesting.csv")
+
+# Take subset of data starting Apr 2, when the dataset first starts reporting this metric
+ICU_vent_data <- on_daily_cases %>%
+  select(`Reported Date`,`Number of patients in ICU on a ventilator with COVID-19`) %>%
+  filter(`Reported Date` >= "2020-04-02")
+
+
+
+```
+
+## Daily Count of Patients in Ontario ICUs with Ventilators
+
+This is a simple graph that pulls the publicly available data on the number of patients in ICUs on a ventilator in Ontario.
+
+As described by the Ontario Open Data Team, this includes patients in levels 2 and 3 flex, neonatal, pediatric, and adult ICU beds. Numbers reflect the previous day's value, counted at 11:59PM. Data was available as of the reporting date of April 2, 2020.
+
+Source: https://data.ontario.ca/dataset/status-of-covid-19-cases-in-ontario
+
+```{r cars}
+
+# Plot
+plot_daily_icu_vent <- ggplot(ICU_vent_data, aes(x=`Reported Date`, y=`Number of patients in ICU on a ventilator with COVID-19`)) +
+  geom_line() +
+  expand_limits(y=0)
+
+plot_daily_icu_vent
+
+```
+
+
